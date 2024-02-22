@@ -11,18 +11,28 @@ datasource db {
 }
 
 model Users {
-  id       Int    @id @default(autoincrement())
-  username String
-  password String
-  email    String @unique
-  role     Roles  @relation(fields: [roleId], references: [id])
-  roleId   Int
+  id          Int                @id @default(autoincrement())
+  username    String
+  password    String
+  email       String             @unique
+  role        UsersRoles[]
+  internalSec UsersInternalSec[]
+  ticket      UsersTickets[]
+}
+
+model UsersRoles {
+  userId Int
+  user   Users @relation(fields: [userId], references: [id])
+  roleId Int
+  role   Roles @relation(fields: [roleId], references: [id])
+
+  @@id([userId, roleId])
 }
 
 model Roles {
   id              Int               @id @default(autoincrement())
   name            String
-  User            Users[]
+  UsersRoles      UsersRoles[]
   RolePermissions RolePermissions[]
 }
 
@@ -39,4 +49,68 @@ model RolePermissions {
   permission   Permissions @relation(fields: [permissionId], references: [id])
 
   @@id([roleId, permissionId])
+}
+
+model UsersInternalSec {
+  userId        Int
+  user          Users       @relation(fields: [userId], references: [id])
+  internalSecId Int
+  internalSec   InternalSec @relation(fields: [internalSecId], references: [id])
+
+  @@id([userId, internalSecId])
+}
+
+model InternalSec {
+  id                  Int                   @id @default(autoincrement())
+  name                String
+  UsersInternalSec    UsersInternalSec[]
+  dependencyId        Int
+  dependencies        Dependencies          @relation(fields: [dependencyId], references: [id])
+  InternalSecServices InternalSecServices[]
+  tickets             Tickets[]
+}
+
+model InternalSecServices {
+  internalSec   InternalSec @relation(fields: [internalSecId], references: [id])
+  internalSecId Int
+  serviceId     Int
+  service       Services    @relation(fields: [serviceId], references: [id])
+
+  @@id([internalSecId, serviceId])
+}
+
+model Services {
+  id          Int                   @id @default(autoincrement())
+  name        String
+  InternalSec InternalSecServices[]
+  Tickets     Tickets[]
+}
+
+model Dependencies {
+  id          Int           @id @default(autoincrement())
+  name        String
+  description String
+  InternalSec InternalSec[]
+}
+
+model UsersTickets {
+  userId   Int
+  user     Users   @relation(fields: [userId], references: [id])
+  ticketId Int
+  ticket   Tickets @relation(fields: [ticketId], references: [id])
+
+  @@id([userId, ticketId])
+}
+
+model Tickets {
+  id            Int            @id @default(autoincrement())
+  title         String
+  description   String
+  status        String
+  priority      String
+  UsersTickets  UsersTickets[]
+  InternalSecId Int
+  internalSec   InternalSec    @relation(fields: [InternalSecId], references: [id])
+  ServiceId     Int
+  service       Services       @relation(fields: [ServiceId], references: [id])
 }
