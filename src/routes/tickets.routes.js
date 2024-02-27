@@ -1,25 +1,16 @@
 import { Router } from "express";
-import { prisma } from "../db.js";
+import {
+  getTickets,
+  getTicketsInternalSec,
+  getAssignedTickets,
+} from "../controllers/tickets.controller.js";
 
 const router = Router();
 
-router.get("/tickets/:id", async (req, res) => {
-  try {
-    const tickets = await prisma.tickets.findFirst({
-      where: {
-        id: parseInt(req.params.id),
-      },
-      include: {
-        internalSec: true,
-        service: true,
-      },
-    });
-    res.json(tickets);
-  } catch (error) {
-    res
-      .status(500)
-      .json({ error: "An error occurred while trying to fetch tickets" });
-  }
-});
+router.get("/tickets", getTickets);
+
+router.get("/internalsec/:id", getTicketsInternalSec);
+
+router.get("/assignedtickets/:id", getAssignedTickets);
 
 export default router;
