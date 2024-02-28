@@ -1,13 +1,8 @@
-import express from "express";
+import app from "./app.js";
+import { prisma } from "./db.js";
 
-import ticketsRoutes from "./routes/tickets.routes.js";
+const PORT = process.env.PORT || 3000;
 
-const app = express();
-
-app.use(express.json());
-
-app.use("/api", ticketsRoutes);
-
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
