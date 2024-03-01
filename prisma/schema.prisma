@@ -61,29 +61,21 @@ model UsersInternalSec {
 }
 
 model InternalSec {
-  id                  Int                   @id @default(autoincrement())
-  name                String
-  UsersInternalSec    UsersInternalSec[]
-  dependencyId        Int
-  dependencies        Dependencies          @relation(fields: [dependencyId], references: [id])
-  InternalSecServices InternalSecServices[]
-  tickets             Tickets[]
-}
-
-model InternalSecServices {
-  internalSec   InternalSec @relation(fields: [internalSecId], references: [id])
-  internalSecId Int
-  serviceId     Int
-  service       Services    @relation(fields: [serviceId], references: [id])
-
-  @@id([internalSecId, serviceId])
+  id               Int                @id @default(autoincrement())
+  name             String
+  UsersInternalSec UsersInternalSec[]
+  dependencyId     Int
+  dependencies     Dependencies       @relation(fields: [dependencyId], references: [id])
+  tickets          Tickets[]
+  services         Services[]
 }
 
 model Services {
-  id          Int                   @id @default(autoincrement())
-  name        String
-  InternalSec InternalSecServices[]
-  Tickets     Tickets[]
+  id            Int         @id @default(autoincrement())
+  name          String
+  internalSecId Int
+  internalSec   InternalSec @relation(fields: [internalSecId], references: [id])
+  Tickets       Tickets[]
 }
 
 model Dependencies {
