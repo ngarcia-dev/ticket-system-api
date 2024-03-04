@@ -30,3 +30,20 @@ export const getInternalsec = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+export const addUserInternalsec = async (req, res) => {
+  const { internalSecId, userId } = req.body;
+
+  try {
+    const internalsec = await prisma.usersInternalSec.create({
+      data: {
+        userId,
+        internalSecId,
+      },
+    });
+
+    res.json(internalsec);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
