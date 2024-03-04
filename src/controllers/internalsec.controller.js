@@ -21,7 +21,7 @@ export const getInternalsec = async (req, res) => {
   try {
     const internalsec = await prisma.internalSec.findMany({
       include: {
-        dependencies: true,
+        services: true,
       },
     });
 

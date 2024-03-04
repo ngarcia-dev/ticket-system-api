@@ -19,7 +19,11 @@ export const createDependency = async (req, res) => {
 
 export const getDependencies = async (req, res) => {
   try {
-    const dependencies = await prisma.dependencies.findMany();
+    const dependencies = await prisma.dependencies.findMany({
+      include: {
+        InternalSec: true,
+      },
+    });
 
     res.json(dependencies);
   } catch (error) {
