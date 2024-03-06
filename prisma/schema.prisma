@@ -80,8 +80,8 @@ model Services {
 
 model Dependencies {
   id          Int           @id @default(autoincrement())
-  name        String
-  description String
+  name        String       @unique
+  description String?
   InternalSec InternalSec[]
 }
 
@@ -97,9 +97,9 @@ model UsersTickets {
 model Tickets {
   id            Int            @id @default(autoincrement())
   title         String
-  description   String
-  status        String
-  priority      String
+  description   String?
+  status        String         @default("open")
+  priority      String         @default("low")
   UsersTickets  UsersTickets[]
   InternalSecId Int
   internalSec   InternalSec    @relation(fields: [InternalSecId], references: [id])
