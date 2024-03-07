@@ -79,12 +79,17 @@ export const profile = async (req, res) => {
         id: true,
         username: true,
         email: true,
+        role: {
+          select: {
+            role: true,
+          },
+        },
       },
     });
 
     res.json(user);
   } catch (error) {
-    res.status(401).json({ error: "User not authenticated" });
+    res.status(401).json({ error: error.message });
   }
 };
 

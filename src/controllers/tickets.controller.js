@@ -70,3 +70,40 @@ export const getAssignedTickets = async (req, res) => {
       .json({ error: "An error occurred while trying to fetch tickets" });
   }
 };
+
+export const createTicket = async (req, res) => {
+  const { title, description, internalSecId, serviceId } = req.body;
+
+  try {
+    const ticket = await prisma.tickets.create({
+      data: {
+        title: title,
+        description: description,
+        UsersTickets: {
+          create: {
+            userId: req.user.id,
+          },
+        },
+        internalSec: {
+          connect: {
+            id: internalSecId,
+          },
+        },
+        service: {
+          connect: {
+            id: serviceId,
+          },
+        },
+      },
+      include: {
+        service: true,
+        UsersTickets: true,
+        internalSec: true,
+      },
+    });
+
+    res.json(ticket);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { authRequired } from "../middlewares/validateToken.js";
 import {
   createServices,
   getServices,
@@ -6,7 +7,7 @@ import {
 
 const router = Router();
 
-router.post("/servicios", createServices);
-router.get("/servicios", getServices);
+router.post("/servicios", authRequired, createServices);
+router.get("/servicios", authRequired, getServices);
 
 export default router;

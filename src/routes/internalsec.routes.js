@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { authRequired } from "../middlewares/validateToken.js";
 import {
   createInternalsec,
   getInternalsec,
@@ -7,8 +8,8 @@ import {
 
 const router = Router();
 
-router.get("/sectorinterno", getInternalsec);
-router.post("/sectorinterno", createInternalsec);
-router.post("/sectorinterno/usuario", addUserInternalsec);
+router.get("/sectorinterno",  authRequired, getInternalsec);
+router.post("/sectorinterno",  authRequired, createInternalsec);
+router.post("/sectorinterno/usuario",  authRequired, addUserInternalsec);
 
 export default router;

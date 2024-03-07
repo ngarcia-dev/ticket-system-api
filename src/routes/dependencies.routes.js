@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { authRequired } from "../middlewares/validateToken.js";
 import {
   getDependencies,
   getDependency,
@@ -9,10 +10,10 @@ import {
 
 const router = Router();
 
-router.get("/dependencies", getDependencies);
-router.get("/dependencies/:id", getDependency);
-router.post("/dependencies", createDependency);
-router.put("/dependencies/:id", updateDependency);
-router.delete("/dependencies/:id", deleteDependency);
+router.get("/dependencies", authRequired, getDependencies);
+router.get("/dependencies/:id", authRequired, getDependency);
+router.post("/dependencies", authRequired, createDependency);
+router.put("/dependencies/:id", authRequired, updateDependency);
+router.delete("/dependencies/:id", authRequired, deleteDependency);
 
 export default router;
