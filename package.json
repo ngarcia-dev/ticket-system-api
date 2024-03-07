@@ -5,7 +5,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "prisma:dev": "npx prisma migrate dev",
+    "prisma:studio": "npx prisma studio",
+    "generate:env": "node generate-env.js"
   },
   "keywords": [],
   "author": "",
