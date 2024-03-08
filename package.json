@@ -8,7 +8,7 @@
     "dev": "nodemon src/index.js",
     "prisma:dev": "npx prisma migrate dev",
     "prisma:studio": "npx prisma studio",
-    "generate:env": "node generate-env.js"
+    "generate:env": "node src/config/fs.js"
   },
   "keywords": [],
   "author": "",
