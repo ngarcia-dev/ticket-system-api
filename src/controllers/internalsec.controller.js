@@ -21,7 +21,11 @@ export const getInternalsec = async (req, res) => {
   try {
     const internalsec = await prisma.internalSec.findMany({
       include: {
-        services: true,
+        service : {
+          select: {
+            name: true,
+          },
+        },
       },
     });
 
@@ -35,7 +39,7 @@ export const addUserInternalsec = async (req, res) => {
   const { internalSecId, userId } = req.body;
 
   try {
-    const internalsec = await prisma.usersInternalSec.create({
+    const internalsec = await prisma.userInternalSec.create({
       data: {
         userId,
         internalSecId,

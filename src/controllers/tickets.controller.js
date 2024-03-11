@@ -5,7 +5,7 @@ import { prisma } from "../db.js";
  */
 export const getTickets = async (req, res) => {
   try {
-    const tickets = await prisma.tickets.findMany();
+    const tickets = await prisma.ticket.findMany();
 
     console.log(tickets);
     res.json(tickets);
@@ -28,12 +28,16 @@ export const getTicketsInternalSec = async (req, res) => {
       include: {
         tickets: {
           include: {
-            UsersTickets: {
+            authorTicket: {
               include: {
-                user: true,
+                author: {
+                  select: {
+                    username: true,
+                  },
+                },
               },
             },
-            service: true,
+            serviceProvided: true,
           },
         },
       },
@@ -53,9 +57,10 @@ export const getTicketsInternalSec = async (req, res) => {
  */
 export const getAssignedTickets = async (req, res) => {
   try {
-    const tickets = await prisma.usersTickets.findMany({
+    const tickets = await prisma.authorTicket.findMany({
       where: {
-        userId: parseInt(req.params.id),
+        // verify if the user is the author of the ticket
+        authorId: parseInt(req.params.id),
       },
       include: {
         ticket: true,
@@ -72,33 +77,33 @@ export const getAssignedTickets = async (req, res) => {
 };
 
 export const createTicket = async (req, res) => {
-  const { title, description, internalSecId, serviceId } = req.body;
+  const { title, description, internalSecDest, service } = req.body;
 
   try {
-    const ticket = await prisma.tickets.create({
+    const ticket = await prisma.ticket.create({
       data: {
-        title: title,
-        description: description,
-        UsersTickets: {
+        title,
+        description,
+        authorTicket: {
           create: {
-            userId: req.user.id,
+            authorId: req.user.id,
           },
         },
-        internalSec: {
+        internalSecDest: {
           connect: {
-            id: internalSecId,
+            id: internalSecDest,
           },
         },
-        service: {
+        serviceProvided: {
           connect: {
-            id: serviceId,
+            id: service,
           },
         },
       },
       include: {
-        service: true,
-        UsersTickets: true,
-        internalSec: true,
+        authorTicket: true,
+        serviceProvided: true,
+        internalSecDest: true,
       },
     });
 

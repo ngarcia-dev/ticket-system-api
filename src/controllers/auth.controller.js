@@ -10,7 +10,7 @@ export const register = async (req, res) => {
   try {
     const passwordHash = await bcrypt.hash(password, 10);
 
-    const user = await prisma.users.create({
+    const user = await prisma.user.create({
       data: {
         username,
         email,
@@ -31,7 +31,7 @@ export const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const user = await prisma.users.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
         email,
       },
@@ -71,7 +71,7 @@ export const profile = async (req, res) => {
   try {
     const payload = jwt.verify(token, TOKEN_SECRET);
 
-    const user = await prisma.users.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
         id: payload.id,
       },

@@ -4,7 +4,7 @@ export const createDependency = async (req, res) => {
   const { name, description } = req.body;
 
   try {
-    const dependency = await prisma.dependencies.create({
+    const dependency = await prisma.dependency.create({
       data: {
         name,
         description,
@@ -19,9 +19,9 @@ export const createDependency = async (req, res) => {
 
 export const getDependencies = async (req, res) => {
   try {
-    const dependencies = await prisma.dependencies.findMany({
+    const dependencies = await prisma.dependency.findMany({
       include: {
-        InternalSec: true,
+        internalSec: true,
       },
     });
 
@@ -33,7 +33,7 @@ export const getDependencies = async (req, res) => {
 
 export const getDependency = async (req, res) => {
   try {
-    const dependency = await prisma.dependencies.findUnique({
+    const dependency = await prisma.dependency.findUnique({
       where: {
         id: parseInt(req.params.id),
       },
@@ -49,7 +49,7 @@ export const updateDependency = async (req, res) => {
   const { name, description } = req.body;
 
   try {
-    const dependency = await prisma.dependencies.update({
+    const dependency = await prisma.dependency.update({
       where: {
         id: parseInt(req.params.id),
       },
@@ -67,26 +67,9 @@ export const updateDependency = async (req, res) => {
 
 export const deleteDependency = async (req, res) => {
   try {
-    const dependency = await prisma.dependencies.delete({
+    const dependency = await prisma.dependency.delete({
       where: {
         id: parseInt(req.params.id),
-      },
-    });
-
-    res.json(dependency);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-export const getDependencyDependencies = async (req, res) => {
-  try {
-    const dependency = await prisma.dependencies.findFirst({
-      where: {
-        id: parseInt(req.params.id),
-      },
-      include: {
-        dependencies: true,
       },
     });
 

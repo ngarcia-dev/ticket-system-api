@@ -4,7 +4,7 @@ export const createServices = async (req, res) => {
   const { name, internalSecId } = req.body;
 
   try {
-    const services = await prisma.services.create({
+    const services = await prisma.service.create({
       data: {
         name,
         internalSecId,
@@ -19,11 +19,7 @@ export const createServices = async (req, res) => {
 
 export const getServices = async (req, res) => {
   try {
-    const services = await prisma.services.findMany({
-      include: {
-        internalSec: true,
-      },
-    });
+    const services = await prisma.service.findMany();
 
     res.json(services);
   } catch (error) {
