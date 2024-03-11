@@ -39,8 +39,8 @@
 
 | Parameter  | Type     | Description                              |
 | :--------- | :------- | :--------------------------------------- |
-| `email`    | `string` | **Required**. The user's name.           |
-| `username` | `string` | **Required**. The user's e-mail address. |
+| `email`    | `string` | **Required**. The user's e-mail address..           |
+| `username` | `string` | **Required**. The user's name |
 | `password` | `string` | **Required**. The user's password.       |
 
 ### Example:
