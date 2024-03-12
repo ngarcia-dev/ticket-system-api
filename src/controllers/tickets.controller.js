@@ -1,78 +1,28 @@
 import { prisma } from "../db.js";
 
 /**
- * Retrieves all tickets from the database.
+ * Retrieves all tickets for a specific user.
  */
 export const getTickets = async (req, res) => {
-  try {
-    const tickets = await prisma.ticket.findMany();
+  const userId = req.user.id;
 
-    console.log(tickets);
-    res.json(tickets);
-  } catch (error) {
-    res
-      .status(500)
-      .json({ error: "An error occurred while trying to fetch tickets" });
-  }
-};
-
-/**
- * Retrieves internal sector tickets with associated users and services.
- */
-export const getTicketsInternalSec = async (req, res) => {
   try {
-    const ticketsInternalsec = await prisma.internalSec.findFirst({
+    const tickets = await prisma.ticket.findMany({
       where: {
-        id: parseInt(req.params.id),
-      },
-      include: {
-        tickets: {
-          include: {
-            authorTicket: {
-              include: {
-                author: {
-                  select: {
-                    username: true,
-                  },
-                },
-              },
-            },
-            serviceProvided: true,
+        authorTicket: {
+          every: {
+            authorId: userId,
           },
         },
       },
-    });
-
-    console.log(ticketsInternalsec);
-    res.json(ticketsInternalsec);
-  } catch (error) {
-    res
-      .status(500)
-      .json({ error: "An error occurred while trying to fetch tickets" });
-  }
-};
-
-/**
- * Retrieves the assigned tickets for a specific user.
- */
-export const getAssignedTickets = async (req, res) => {
-  try {
-    const tickets = await prisma.authorTicket.findMany({
-      where: {
-        // verify if the user is the author of the ticket
-        authorId: parseInt(req.params.id),
-      },
       include: {
-        ticket: true,
+        authorTicket: true,
       },
     });
 
-    console.log(tickets);
     res.json(tickets);
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "An error occurred while trying to fetch tickets" });
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -112,3 +62,13 @@ export const createTicket = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+/**
+ * Retrieves internal sector tickets with associated users and services.
+ */
+export const getTicketsInternalSec = async (req, res) => {};
+
+/**
+ * Retrieves the assigned tickets for a specific user.
+ */
+export const getAssignedTickets = async (req, res) => {};

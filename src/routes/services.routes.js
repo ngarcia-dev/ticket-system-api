@@ -7,7 +7,7 @@ import {
 
 const router = Router();
 
-router.post("/servicios", authRequired, createServices);
-router.get("/servicios", authRequired, getServices);
+router.post("/services", authRequired, createServices);
+router.get("/services", authRequired, getServices);
 
 export default router;

@@ -9,12 +9,12 @@ import {
 
 const router = Router();
 
-router.get("/tickets",  authRequired, getTickets);
+router.get("/tickets", authRequired, getTickets);
 
-router.get("/internalsec/:id",  authRequired, getTicketsInternalSec);
+router.get("/tickets/internalsec", authRequired, getTicketsInternalSec);
 
-router.get("/assignedtickets/:id",  authRequired, getAssignedTickets);
+router.get("/tickets/assigned", authRequired, getAssignedTickets);
 
-router.post("/createticket", authRequired, createTicket);
+router.post("/tickets", authRequired, createTicket);
 
 export default router;

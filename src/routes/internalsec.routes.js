@@ -8,8 +8,8 @@ import {
 
 const router = Router();
 
-router.get("/sectorinterno",  authRequired, getInternalsec);
-router.post("/sectorinterno",  authRequired, createInternalsec);
-router.post("/sectorinterno/usuario",  authRequired, addUserInternalsec);
+router.get("/internalsec",  authRequired, getInternalsec);
+router.post("/internalsec",  authRequired, createInternalsec);
+router.post("/internalsec/user",  authRequired, addUserInternalsec);
 
 export default router;
