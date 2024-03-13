@@ -27,9 +27,27 @@ export const getTickets = async (req, res) => {
 };
 
 export const createTicket = async (req, res) => {
-  const { title, description, internalSecDest, service } = req.body;
+  const { title, description, internalSecDest, serviceId } = req.body;
 
   try {
+    const internalSec = await prisma.internalSec.findUnique({
+      where: {
+        id: internalSecDest,
+      },
+      include: {
+        service: true,
+      },
+    });
+
+    if (!internalSec)
+      return res.status(404).json({ error: "InternalSec not found" });
+
+    const service = internalSec.service.find(
+      (service) => service.id === serviceId
+    );
+
+    if (!service) return res.status(404).json({ error: "Service not found" });
+
     const ticket = await prisma.ticket.create({
       data: {
         title,
@@ -39,21 +57,11 @@ export const createTicket = async (req, res) => {
             authorId: req.user.id,
           },
         },
-        internalSecDest: {
-          connect: {
-            id: internalSecDest,
-          },
-        },
-        serviceProvided: {
-          connect: {
-            id: service,
-          },
-        },
+        internalSecDestId: internalSecDest,
+        serviceProvidedId: serviceId,
       },
       include: {
         authorTicket: true,
-        serviceProvided: true,
-        internalSecDest: true,
       },
     });
 
