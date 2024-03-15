@@ -35,6 +35,13 @@ export const login = async (req, res) => {
       where: {
         email,
       },
+      include: {
+        role: {
+          select: {
+            role: true,
+          },
+        },
+      },
     });
 
     if (!user) {
@@ -47,7 +54,10 @@ export const login = async (req, res) => {
       return res.status(401).json({ error: "Invalid password" });
     }
 
-    const accessToken = await createAccessToken({ id: user.id });
+    const accessToken = await createAccessToken({
+      id: user.id,
+      role: user.role,
+    });
     res.cookie("access-token", accessToken, { httpOnly: true });
 
     res.json(user);
