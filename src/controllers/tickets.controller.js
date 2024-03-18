@@ -1,31 +1,5 @@
 import { prisma } from "../db.js";
 
-/**
- * Retrieves all tickets for a specific user.
- */
-export const getTickets = async (req, res) => {
-  const userId = req.user.id;
-
-  try {
-    const tickets = await prisma.ticket.findMany({
-      where: {
-        authorTicket: {
-          every: {
-            authorId: userId,
-          },
-        },
-      },
-      include: {
-        authorTicket: true,
-      },
-    });
-
-    res.json(tickets);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
 export const createTicket = async (req, res) => {
   const { title, description, internalSecDest, serviceId } = req.body;
 
@@ -66,6 +40,32 @@ export const createTicket = async (req, res) => {
     });
 
     res.json(ticket);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+/**
+ * Retrieves all tickets for a specific user.
+ */
+export const getTicketsAuthor = async (req, res) => {
+  const userId = req.user.id;
+
+  try {
+    const tickets = await prisma.ticket.findMany({
+      where: {
+        authorTicket: {
+          every: {
+            authorId: userId,
+          },
+        },
+      },
+      include: {
+        authorTicket: true,
+      },
+    });
+
+    res.json(tickets);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
