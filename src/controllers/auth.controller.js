@@ -41,6 +41,11 @@ export const login = async (req, res) => {
             role: true,
           },
         },
+        internalSec: {
+          select: {
+            internalSecId: true,
+          },
+        },
       },
     });
 
@@ -57,6 +62,7 @@ export const login = async (req, res) => {
     const accessToken = await createAccessToken({
       id: user.id,
       role: user.role,
+      internalSec: user.internalSec[0].internalSecId,
     });
     res.cookie("access-token", accessToken, { httpOnly: true });
 
