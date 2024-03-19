@@ -49,14 +49,14 @@ export const createTicket = async (req, res) => {
  * Retrieves all tickets for a specific user.
  */
 export const getTicketsAuthor = async (req, res) => {
-  const userId = req.user.id;
+  const { id } = req.user;
 
   try {
     const tickets = await prisma.ticket.findMany({
       where: {
         authorTicket: {
           every: {
-            authorId: userId,
+            authorId: id,
           },
         },
       },
@@ -79,12 +79,12 @@ export const getTicketsAuthor = async (req, res) => {
  * Retrieves internal sector tickets with associated users and services.
  */
 export const getTicketsInternalSec = async (req, res) => {
-  const internalSecId = req.user.internalSec;
+  const { internalSec } = req.user;
 
   try {
     const tickets = await prisma.ticket.findMany({
       where: {
-        internalSecDestId: internalSecId,
+        internalSecDestId: internalSec,
       },
       include: {
         authorTicket: {
@@ -102,6 +102,6 @@ export const getTicketsInternalSec = async (req, res) => {
 };
 
 /**
- * Retrieves the assigned tickets for a specific user.
+ * Retrieves dependency tickets
  */
-export const getAssignedTickets = async (req, res) => {};
+export const getTicketsDependency = async (req, res) => {};

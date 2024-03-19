@@ -3,7 +3,7 @@ import { authRequired } from "../middlewares/validateToken.js";
 import {
   getTicketsAuthor,
   getTicketsInternalSec,
-  getAssignedTickets,
+  getTicketsDependency,
   createTicket,
 } from "../controllers/tickets.controller.js";
 
@@ -13,7 +13,7 @@ router.get("/tickets", authRequired, getTicketsAuthor);
 
 router.get("/tickets/internalsec", authRequired, getTicketsInternalSec);
 
-router.get("/tickets/assigned", authRequired, getAssignedTickets);
+router.get("/tickets/dependency", authRequired, getTicketsDependency);
 
 router.post("/tickets", authRequired, createTicket);
 

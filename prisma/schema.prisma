@@ -37,6 +37,7 @@ model Dependency {
   id          Int           @id @default(autoincrement())
   name        String        @unique
   description String?
+  Tickets     Ticket[]
   internalSec InternalSec[]
 }
 
@@ -65,6 +66,8 @@ model Ticket {
   status            String         @default("open")
   priority          String         @default("low")
   authorTicket      AuthorTicket[]
+  dependencyDest    Dependency     @relation(fields: [dependencyDestId], references: [id])
+  dependencyDestId  Int
   internalSecDest   InternalSec    @relation(fields: [internalSecDestId], references: [id])
   internalSecDestId Int
   serviceProvided   Service        @relation(fields: [serviceProvidedId], references: [id])
