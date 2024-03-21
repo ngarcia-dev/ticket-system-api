@@ -115,4 +115,37 @@ export const getTicketsInternalSec = async (req, res) => {
 /**
  * Retrieves dependency tickets
  */
-export const getTicketsDependency = async (req, res) => {};
+export const getTicketsDependency = async (req, res) => {
+  const { internalSec } = req.user;
+
+  try {
+    const internalSector = await prisma.internalSec.findUnique({
+      where: {
+        id: internalSec,
+      },
+      select: {
+        dependencyId: true,
+      },
+    });
+
+    if (!internalSector)
+      return res.status(404).json({ error: "Internal sector not found" });
+
+    const allTicketsForDependency = await prisma.ticket.findMany({
+      where: {
+        dependencyDestId: internalSector.dependencyId,
+      },
+      include: {
+        authorTicket: {
+          select: {
+            authorId: true,
+          },
+        },
+      },
+    });
+
+    res.json(allTicketsForDependency);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
