@@ -1,24 +1,34 @@
 import { prisma } from "../db.js";
 
 export const createTicket = async (req, res) => {
-  const { title, description, internalSecDest, serviceId } = req.body;
+  const { title, description, dependencyDest, internalSecDest, serviceId } =
+    req.body;
 
   try {
-    const internalSec = await prisma.internalSec.findUnique({
+    const dependency = await prisma.dependency.findUnique({
       where: {
-        id: internalSecDest,
+        id: dependencyDest,
       },
       include: {
-        service: true,
+        internalSec: {
+          include: {
+            service: true,
+          },
+        },
       },
     });
 
-    if (!internalSec)
-      return res.status(404).json({ error: "InternalSec not found" });
+    if (!dependency)
+      return res.status(404).json({ error: "Dependency not found" });
 
-    const service = internalSec.service.find(
-      (service) => service.id === serviceId
+    const internalSec = dependency.internalSec.find(
+      (sec) => sec.id === internalSecDest
     );
+
+    if (!internalSec)
+      return res.status(404).json({ error: "Internal sector not found" });
+
+    const service = internalSec.service.find((serv) => serv.id === serviceId);
 
     if (!service) return res.status(404).json({ error: "Service not found" });
 
@@ -31,6 +41,7 @@ export const createTicket = async (req, res) => {
             authorId: req.user.id,
           },
         },
+        dependencyDestId: dependencyDest,
         internalSecDestId: internalSecDest,
         serviceProvidedId: serviceId,
       },
