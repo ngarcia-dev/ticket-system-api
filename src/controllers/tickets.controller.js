@@ -77,14 +77,14 @@ export const getTicketsAuthor = async (req, res) => {
             authorId: true,
           },
         },
-        assignTicket: {
+        assignerTicket: {
           select: {
-            userId: true,
+            assignerId: true,
           },
         },
-        designateTicket: {
+        executorTicket: {
           select: {
-            userId: true,
+            executorId: true,
           },
         },
       },
@@ -113,14 +113,14 @@ export const getTicketsInternalSec = async (req, res) => {
             authorId: true,
           },
         },
-        assignTicket: {
+        assignerTicket: {
           select: {
-            userId: true,
+            assignerId: true,
           },
         },
-        designateTicket: {
+        executorTicket: {
           select: {
-            userId: true,
+            executorId: true,
           },
         },
       },
@@ -161,14 +161,14 @@ export const getTicketsDependency = async (req, res) => {
             authorId: true,
           },
         },
-        assignTicket: {
+        assignerTicket: {
           select: {
-            userId: true,
+            assignerId: true,
           },
         },
-        designateTicket: {
+        executorTicket: {
           select: {
-            userId: true,
+            executorId: true,
           },
         },
       },
@@ -179,3 +179,81 @@ export const getTicketsDependency = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+/**
+ * Assigns a ticket to a executor.
+ * Pending: Validate if the ticket is already assigned.
+ */
+export const assignerTickets = async (req, res) => {
+  const { ticketId } = req.params;
+  const { id } = req.user;
+
+  try {
+    const ticket = await prisma.ticket.findUnique({
+      where: {
+        id: parseInt(ticketId),
+      },
+    });
+
+    if (!ticket) return res.status(404).json({ error: "Ticket not found" });
+
+    const existingAssignment = await prisma.assignerTicket.findUnique({
+      where: {
+        assignerId_ticketId: {
+          assignerId: id,
+          ticketId: parseInt(ticketId),
+        },
+      },
+    });
+
+    if (existingAssignment)
+      return res.status(400).json({ error: "Ticket already assigned" });
+
+    const assigner = await prisma.assignerTicket.create({
+      data: {
+        assignerId: id,
+        ticketId: parseInt(ticketId),
+      },
+    });
+
+    res.json(assigner);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+//   const { ticketId } = req.params;
+//   const { id } = req.user;
+
+//   try {
+//     const ticket = await prisma.ticket.findUnique({
+//       where: {
+//         id: parseInt(ticketId),
+//       },
+//     });
+
+//     if (!ticket) return res.status(404).json({ error: "Ticket not found" });
+
+//     const existingAssignment = await prisma.assignerTicket.findUnique({
+//       where: {
+//         assignerId_ticketId: {
+//           assignerId: id,
+//           ticketId: parseInt(ticketId),
+//         },
+//       },
+//     });
+
+//     if (existingAssignment)
+//       return res.status(400).json({ error: "Ticket already assigned" });
+
+//     const assigner = await prisma.assignerTicket.create({
+//       data: {
+//         assignerId: id,
+//         ticketId: parseInt(ticketId),
+//       },
+//     });
+
+//     res.json(assigner);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };

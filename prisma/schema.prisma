@@ -18,8 +18,8 @@ model User {
   role        UserRole[]
   internalSec UserInternalSec[]
   author      AuthorTicket[]
-  assign      AssignTicket?
-  designate   DesignateTicket?
+  assigner    AssignerTicket[]
+  executor    ExecutorTicket[]
 }
 
 model Role {
@@ -62,22 +62,22 @@ model Service {
 }
 
 model Ticket {
-  id                Int              @id @default(autoincrement())
-  title             String           @db.VarChar(255)
+  id                Int             @id @default(autoincrement())
+  title             String          @db.VarChar(255)
   description       String?
-  status            String           @default("open")
-  priority          String           @default("low")
+  status            String          @default("open")
+  priority          String          @default("low")
   authorTicket      AuthorTicket[]
-  assignTicket      AssignTicket?
-  designateTicket   DesignateTicket?
-  dependencyDest    Dependency       @relation(fields: [dependencyDestId], references: [id])
+  assignerTicket    AssignerTicket?
+  executorTicket    ExecutorTicket?
+  dependencyDest    Dependency      @relation(fields: [dependencyDestId], references: [id])
   dependencyDestId  Int
-  internalSecDest   InternalSec      @relation(fields: [internalSecDestId], references: [id])
+  internalSecDest   InternalSec     @relation(fields: [internalSecDestId], references: [id])
   internalSecDestId Int
-  serviceProvided   Service          @relation(fields: [serviceProvidedId], references: [id])
+  serviceProvided   Service         @relation(fields: [serviceProvidedId], references: [id])
   serviceProvidedId Int
-  createdAt         DateTime         @default(now())
-  updatedAt         DateTime         @updatedAt
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
 }
 
 model UserRole {
@@ -116,20 +116,20 @@ model AuthorTicket {
   @@id([authorId, ticketId])
 }
 
-model AssignTicket {
-  user     User   @relation(fields: [userId], references: [id])
-  userId   Int    @unique
-  ticket   Ticket @relation(fields: [ticketId], references: [id])
-  ticketId Int    @unique
+model AssignerTicket {
+  assigner   User   @relation(fields: [assignerId], references: [id])
+  assignerId Int
+  ticket     Ticket @relation(fields: [ticketId], references: [id])
+  ticketId   Int    @unique
 
-  @@id([userId, ticketId])
+  @@id([assignerId, ticketId])
 }
 
-model DesignateTicket {
-  user     User   @relation(fields: [userId], references: [id])
-  userId   Int    @unique
-  ticket   Ticket @relation(fields: [ticketId], references: [id])
-  ticketId Int    @unique
+model ExecutorTicket {
+  executor   User   @relation(fields: [executorId], references: [id])
+  executorId Int
+  ticket     Ticket @relation(fields: [ticketId], references: [id])
+  ticketId   Int    @unique
 
-  @@id([userId, ticketId])
+  @@id([executorId, ticketId])
 }
