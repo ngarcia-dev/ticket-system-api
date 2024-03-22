@@ -77,6 +77,16 @@ export const getTicketsAuthor = async (req, res) => {
             authorId: true,
           },
         },
+        assignTicket: {
+          select: {
+            userId: true,
+          },
+        },
+        designateTicket: {
+          select: {
+            userId: true,
+          },
+        },
       },
     });
 
@@ -101,6 +111,16 @@ export const getTicketsInternalSec = async (req, res) => {
         authorTicket: {
           select: {
             authorId: true,
+          },
+        },
+        assignTicket: {
+          select: {
+            userId: true,
+          },
+        },
+        designateTicket: {
+          select: {
+            userId: true,
           },
         },
       },
@@ -139,6 +159,16 @@ export const getTicketsDependency = async (req, res) => {
         authorTicket: {
           select: {
             authorId: true,
+          },
+        },
+        assignTicket: {
+          select: {
+            userId: true,
+          },
+        },
+        designateTicket: {
+          select: {
+            userId: true,
           },
         },
       },
