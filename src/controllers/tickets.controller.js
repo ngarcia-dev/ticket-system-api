@@ -185,6 +185,7 @@ export const getTicketsDependency = async (req, res) => {
  * Pending: Validate if the ticket is already assigned.
  */
 export const assignerTickets = async (req, res) => {
+  const { executorId } = req.body;
   const { ticketId } = req.params;
   const { id } = req.user;
 
@@ -209,51 +210,33 @@ export const assignerTickets = async (req, res) => {
     if (existingAssignment)
       return res.status(400).json({ error: "Ticket already assigned" });
 
-    const assigner = await prisma.assignerTicket.create({
+    await prisma.assignerTicket.create({
       data: {
         assignerId: id,
         ticketId: parseInt(ticketId),
       },
     });
 
-    res.json(assigner);
+    const executorAssigned = await prisma.executorTicket.create({
+      data: {
+        executorId: executorId,
+        ticketId: parseInt(ticketId),
+      },
+      include: {
+        ticket: {
+          select: {
+            assignerTicket: {
+              select: {
+                assignerId: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    res.json(executorAssigned);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
-//   const { ticketId } = req.params;
-//   const { id } = req.user;
-
-//   try {
-//     const ticket = await prisma.ticket.findUnique({
-//       where: {
-//         id: parseInt(ticketId),
-//       },
-//     });
-
-//     if (!ticket) return res.status(404).json({ error: "Ticket not found" });
-
-//     const existingAssignment = await prisma.assignerTicket.findUnique({
-//       where: {
-//         assignerId_ticketId: {
-//           assignerId: id,
-//           ticketId: parseInt(ticketId),
-//         },
-//       },
-//     });
-
-//     if (existingAssignment)
-//       return res.status(400).json({ error: "Ticket already assigned" });
-
-//     const assigner = await prisma.assignerTicket.create({
-//       data: {
-//         assignerId: id,
-//         ticketId: parseInt(ticketId),
-//       },
-//     });
-
-//     res.json(assigner);
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// };

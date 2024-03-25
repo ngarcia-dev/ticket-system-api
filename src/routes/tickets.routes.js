@@ -5,7 +5,7 @@ import {
   getTicketsInternalSec,
   getTicketsDependency,
   createTicket,
-  assignTicket,
+  assignerTickets,
 } from "../controllers/tickets.controller.js";
 
 const router = Router();
@@ -18,6 +18,6 @@ router.get("/tickets/dependency", authRequired, getTicketsDependency);
 
 router.post("/tickets", authRequired, createTicket);
 
-router.put("/tickets/:ticketId/assign", authRequired, assignTicket);
+router.put("/tickets/:ticketId/assign", authRequired, assignerTickets);
 
 export default router;
