@@ -210,33 +210,87 @@ export const assignerTickets = async (req, res) => {
     if (existingAssignment)
       return res.status(400).json({ error: "Ticket already assigned" });
 
-    await prisma.assignerTicket.create({
-      data: {
-        assignerId: id,
-        ticketId: parseInt(ticketId),
-      },
-    });
-
-    const executorAssigned = await prisma.executorTicket.create({
-      data: {
-        executorId: executorId,
-        ticketId: parseInt(ticketId),
-      },
-      include: {
-        ticket: {
-          select: {
-            assignerTicket: {
-              select: {
-                assignerId: true,
+    const executorAssigned = await prisma.$transaction([
+      prisma.assignerTicket.create({
+        data: {
+          assignerId: id,
+          ticketId: parseInt(ticketId),
+        },
+      }),
+      prisma.executorTicket.create({
+        data: {
+          executorId: executorId,
+          ticketId: parseInt(ticketId),
+        },
+        include: {
+          ticket: {
+            select: {
+              assignerTicket: {
+                select: {
+                  assignerId: true,
+                },
               },
             },
+          },
+        },
+      }),
+    ]);
+
+    res.json(executorAssigned);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+/**
+ * Retrieves for id ticket.
+ */
+export const getTicketId = async (req, res) => {
+  const { ticketId } = req.params;
+
+  try {
+    const ticket = await prisma.ticket.findUnique({
+      where: {
+        id: parseInt(ticketId),
+      },
+      include: {
+        authorTicket: {
+          select: {
+            authorId: true,
+          },
+        },
+        assignerTicket: {
+          select: {
+            assignerId: true,
+          },
+        },
+        executorTicket: {
+          select: {
+            executorId: true,
+          },
+        },
+        dependencyDest: {
+          select: {
+            name: true,
+          },
+        },
+        internalSecDest: {
+          select: {
+            name: true,
+          },
+        },
+        serviceProvided: {
+          select: {
+            name: true,
           },
         },
       },
     });
 
-    res.json(executorAssigned);
+    if (!ticket) return res.status(404).json({ error: "Ticket not found" });
+
+    res.json(ticket);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: "error.message" });
   }
 };
