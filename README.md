@@ -59,7 +59,7 @@
 }
 ```
 
-#### Get all tickets
+#### Get all tickets author user
 
 ```http
   GET /api/tickets
@@ -69,7 +69,7 @@
 | :-------- | :------- | :------------------------- |
 | `api_key` | `string` | **Required**. Your API key |
 
-#### Get item
+#### Get 
 
 ```http
   GET /api/tickets/${id}
