@@ -19,7 +19,11 @@ export const register = async (req, res) => {
     });
 
     const accessToken = await createAccessToken({ id: user.id });
-    res.cookie("access-token", accessToken, { httpOnly: true });
+    res.cookie("access-token", accessToken, {
+      httpOnly: true,
+      sameSite: "none",
+      secure: true,
+    });
 
     res.json(user);
   } catch (error) {
@@ -64,7 +68,11 @@ export const login = async (req, res) => {
       role: user.role,
       internalSec: user.internalSec[0].internalSecId,
     });
-    res.cookie("access-token", accessToken, { httpOnly: true });
+    res.cookie("access-token", accessToken, {
+      httpOnly: true,
+      sameSite: "none",
+      secure: true,
+    });
 
     res.json(user);
   } catch (error) {
@@ -73,7 +81,12 @@ export const login = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-  res.clearCookie("access-token");
+  res.cookie("access-token", "", {
+    httpOnly: true,
+    sameSite: "none",
+    secure: true,
+    expires: new Date(0),
+  });
   res.json({ message: "Logged out" });
 };
 
