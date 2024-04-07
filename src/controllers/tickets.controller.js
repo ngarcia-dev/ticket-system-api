@@ -7,7 +7,7 @@ export const createTicket = async (req, res) => {
   try {
     const dependency = await prisma.dependency.findUnique({
       where: {
-        id: dependencyDest,
+        id: parseInt(dependencyDest),
       },
       include: {
         internalSec: {
@@ -22,13 +22,15 @@ export const createTicket = async (req, res) => {
       return res.status(404).json({ error: "Dependency not found" });
 
     const internalSec = dependency.internalSec.find(
-      (sec) => sec.id === internalSecDest
+      (sec) => sec.id === parseInt(internalSecDest)
     );
 
     if (!internalSec)
       return res.status(404).json({ error: "Internal sector not found" });
 
-    const service = internalSec.service.find((serv) => serv.id === serviceId);
+    const service = internalSec.service.find(
+      (serv) => serv.id === parseInt(serviceId)
+    );
 
     if (!service) return res.status(404).json({ error: "Service not found" });
 
@@ -41,9 +43,9 @@ export const createTicket = async (req, res) => {
             authorId: req.user.id,
           },
         },
-        dependencyDestId: dependencyDest,
-        internalSecDestId: internalSecDest,
-        serviceProvidedId: serviceId,
+        dependencyDestId: parseInt(dependencyDest),
+        internalSecDestId: parseInt(internalSecDest),
+        serviceProvidedId: parseInt(serviceId),
       },
       include: {
         authorTicket: true,
