@@ -7,7 +7,7 @@ export const createServices = async (req, res) => {
     const services = await prisma.service.create({
       data: {
         name,
-        internalSecId,
+        internalSecId: parseInt(internalSecId),
       },
     });
 

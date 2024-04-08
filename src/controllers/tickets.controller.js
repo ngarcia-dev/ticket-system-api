@@ -221,7 +221,7 @@ export const assignerTickets = async (req, res) => {
       }),
       prisma.executorTicket.create({
         data: {
-          executorId: executorId,
+          executorId: parseInt(executorId),
           ticketId: parseInt(ticketId),
         },
         include: {
