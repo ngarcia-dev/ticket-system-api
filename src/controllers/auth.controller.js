@@ -18,6 +18,35 @@ export const register = async (req, res) => {
       },
     });
 
+    // Assign role and internal sector to user on register (default values)
+    const [role, internalSec] = await prisma.$transaction([
+      prisma.role.findFirst({
+        where: {
+          name: "ejecutor",
+        },
+      }),
+      prisma.internalSec.findFirst({
+        where: {
+          name: "Guest",
+        },
+      }),
+    ]);
+
+    await prisma.$transaction([
+      prisma.userRole.create({
+        data: {
+          roleId: role.id,
+          userId: user.id,
+        },
+      }),
+      prisma.userInternalSec.create({
+        data: {
+          internalSecId: internalSec.id,
+          userId: user.id,
+        },
+      }),
+    ]);
+
     const accessToken = await createAccessToken({ id: user.id });
     res.cookie("access-token", accessToken, {
       httpOnly: true,
