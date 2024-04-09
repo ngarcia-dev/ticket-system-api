@@ -2,6 +2,7 @@ import express from "express";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import dotenv from "dotenv";
 
 import authRoutes from "./routes/auth.routes.js";
 import ticketsRoutes from "./routes/tickets.routes.js";
@@ -9,9 +10,12 @@ import dependenciesRoutes from "./routes/dependencies.routes.js";
 import internalSecRoutes from "./routes/internalsec.routes.js";
 import servicesRoutes from "./routes/services.routes.js";
 
+import { UI } from "./conf/config.js";
+
+dotenv.config();
 const app = express();
 
-const whitlist = ["http://localhost:5173"];
+const whitlist = [UI];
 
 app.use(
   cors({
