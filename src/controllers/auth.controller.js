@@ -55,8 +55,8 @@ export const register = async (req, res) => {
     ]);
 
     const accessToken = await createAccessToken({ id: user.id });
-    res.cookie("access-token", accessToken, {
-      httpOnly: true,
+    res.cookie("token", accessToken, {
+      httpOnly: process.env.NODE_ENV !== "development",
       sameSite: "none",
       secure: true,
     });
@@ -97,8 +97,8 @@ export const login = async (req, res) => {
       return res.status(401).json({ error: "Invalid password" });
 
     const accessToken = await createAccessToken({ id: user.id });
-    res.cookie("access-token", accessToken, {
-      httpOnly: true,
+    res.cookie("token", accessToken, {
+      httpOnly: process.env.NODE_ENV !== "development",
       sameSite: "none",
       secure: true,
     });
@@ -115,18 +115,17 @@ export const login = async (req, res) => {
   }
 };
 
-export const logout = async (req, res) => {
-  res.cookie("access-token", "", {
-    httpOnly: true,
-    sameSite: "none",
+export const logout = (req, res) => {
+  res.cookie("token", "", {
+    httpOnly: process.env.NODE_ENV !== "development",
     secure: true,
     expires: new Date(0),
   });
-  res.json({ message: "Logged out" });
+  res.sendStatus(204);
 };
 
 export const profile = async (req, res) => {
-  const token = req.cookies["access-token"];
+  const token = req.cookies["token"];
 
   if (!token) {
     return res.status(401).json({ error: "User not authenticated" });
@@ -158,7 +157,7 @@ export const profile = async (req, res) => {
 };
 
 export const verifyToken = async (req, res) => {
-  const token = req.cookies["access-token"];
+  const token = req.cookies["token"];
 
   if (!token) {
     return res.status(401).json({ error: "User not authenticated" });

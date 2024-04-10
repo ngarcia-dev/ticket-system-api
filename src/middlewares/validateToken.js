@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import { TOKEN_SECRET } from "../conf/config.js";
 
 export const authRequired = (req, res, next) => {
-  const accessToken = req.cookies["access-token"];
+  const accessToken = req.cookies["token"];
 
   if (!accessToken)
     return res.status(401).json({ error: "User not authenticated" });
