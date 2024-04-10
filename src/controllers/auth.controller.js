@@ -18,6 +18,8 @@ export const register = async (req, res) => {
       },
     });
 
+    if (!user) return res.status(500).json({ error: "Email already exists" });
+
     // Assign role and internal sector to user on register (default values)
     const [role, internalSec] = await prisma.$transaction([
       prisma.role.findFirst({
@@ -31,6 +33,11 @@ export const register = async (req, res) => {
         },
       }),
     ]);
+
+    if (!role || !internalSec)
+      return res
+        .status(500)
+        .json({ error: "Role or Internal Sector not found" });
 
     await prisma.$transaction([
       prisma.userRole.create({
@@ -82,28 +89,27 @@ export const login = async (req, res) => {
       },
     });
 
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
+    if (!user) return res.status(404).json({ error: "User not found" });
 
     const validPassword = await bcrypt.compare(password, user.password);
 
-    if (!validPassword) {
+    if (!validPassword)
       return res.status(401).json({ error: "Invalid password" });
-    }
 
-    const accessToken = await createAccessToken({
-      id: user.id,
-      role: user.role,
-      internalSec: user.internalSec[0].internalSecId,
-    });
+    const accessToken = await createAccessToken({ id: user.id });
     res.cookie("access-token", accessToken, {
       httpOnly: true,
       sameSite: "none",
       secure: true,
     });
 
-    res.json(user);
+    res.json({
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      role: user.role,
+      internalSec: user.internalSec,
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
