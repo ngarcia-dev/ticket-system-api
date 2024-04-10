@@ -2,7 +2,6 @@ import express from "express";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import dotenv from "dotenv";
 
 import authRoutes from "./routes/auth.routes.js";
 import ticketsRoutes from "./routes/tickets.routes.js";
@@ -12,7 +11,6 @@ import servicesRoutes from "./routes/services.routes.js";
 
 import { UI } from "./conf/config.js";
 
-dotenv.config();
 const app = express();
 
 const whitlist = [UI];

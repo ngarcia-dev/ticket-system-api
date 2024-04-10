@@ -1,7 +1,8 @@
-import { prisma } from "../db.js";
 import bcrypt from "bcryptjs";
-import { createAccessToken } from "../libs/jwt.js";
 import jwt from "jsonwebtoken";
+
+import { prisma } from "../db.js";
+import { createAccessToken } from "../libs/jwt.js";
 import { TOKEN_SECRET } from "../conf/config.js";
 
 export const register = async (req, res) => {
