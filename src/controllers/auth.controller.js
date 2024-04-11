@@ -55,14 +55,20 @@ export const register = async (req, res) => {
       }),
     ]);
 
-    const accessToken = await createAccessToken({ id: user.id });
+    const accessToken = await createAccessToken({ id: user.id, username });
     res.cookie("token", accessToken, {
       httpOnly: process.env.NODE_ENV !== "development",
       sameSite: "none",
       secure: true,
     });
 
-    res.json(user);
+    res.json({
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      role: role,
+      internalSec: internalSec,
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -97,7 +103,10 @@ export const login = async (req, res) => {
     if (!validPassword)
       return res.status(401).json({ error: "Invalid password" });
 
-    const accessToken = await createAccessToken({ id: user.id });
+    const accessToken = await createAccessToken({
+      id: user.id,
+      username: user.username,
+    });
     res.cookie("token", accessToken, {
       httpOnly: process.env.NODE_ENV !== "development",
       sameSite: "none",
@@ -128,9 +137,7 @@ export const logout = (req, res) => {
 export const profile = async (req, res) => {
   const token = req.cookies["token"];
 
-  if (!token) {
-    return res.status(401).json({ error: "User not authenticated" });
-  }
+  if (!token) return res.status(401).json({ error: "User not authenticated" });
 
   try {
     const payload = jwt.verify(token, TOKEN_SECRET);
@@ -160,9 +167,7 @@ export const profile = async (req, res) => {
 export const verifyToken = async (req, res) => {
   const token = req.cookies["token"];
 
-  if (!token) {
-    return res.status(401).json({ error: "User not authenticated" });
-  }
+  if (!token) return res.status(401).json({ error: "User not authenticated" });
 
   try {
     const payload = jwt.verify(token, TOKEN_SECRET);
