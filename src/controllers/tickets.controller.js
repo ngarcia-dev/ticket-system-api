@@ -69,7 +69,7 @@ export const getTicketsAuthor = async (req, res) => {
       where: {
         authorTicket: {
           every: {
-            authorId: id,
+            authorId: parseInt(id),
           },
         },
       },
@@ -107,7 +107,7 @@ export const getTicketsInternalSec = async (req, res) => {
   try {
     const tickets = await prisma.ticket.findMany({
       where: {
-        internalSecDestId: internalSec,
+        internalSecDestId: parseInt(internalSec),
       },
       include: {
         authorTicket: {
@@ -138,7 +138,7 @@ export const getTicketsInternalSec = async (req, res) => {
  * Retrieves dependency tickets
  */
 export const getTicketsDependency = async (req, res) => {
-  const { internalSec } = req.user;
+  const internalSec = parseInt(req.user.internalSec);
 
   try {
     const internalSector = await prisma.internalSec.findUnique({

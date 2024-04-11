@@ -21,7 +21,11 @@ export const getDependencies = async (req, res) => {
   try {
     const dependencies = await prisma.dependency.findMany({
       include: {
-        internalSec: true,
+        internalSec: {
+          include: {
+            service: true,
+          },
+        },
       },
     });
 
