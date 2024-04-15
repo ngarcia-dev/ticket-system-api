@@ -8,6 +8,7 @@ import {
   assignerTickets,
   getTicketId,
   updateTicket,
+  deleteTicket,
 } from "../controllers/tickets.controller.js";
 
 const router = Router();
@@ -25,5 +26,7 @@ router.put("/tickets/:ticketId/assign", authRequired, assignerTickets);
 router.get("/tickets/:ticketId", authRequired, getTicketId);
 
 router.patch("/tickets/:ticketId", authRequired, updateTicket);
+
+router.delete("/tickets/:ticketId", authRequired, deleteTicket);
 
 export default router;

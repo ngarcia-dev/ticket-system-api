@@ -361,3 +361,39 @@ export const updateTicket = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+/**
+ * Deletes a ticket.
+ */
+export const deleteTicket = async (req, res) => {
+  const { ticketId } = req.params;
+
+  try {
+    const ticket = await prisma.ticket.findUnique({
+      where: {
+        id: parseInt(ticketId),
+      },
+    });
+
+    if (!ticket) return res.status(404).json({ error: "Ticket not found" });
+
+    await prisma.authorTicket.delete({
+      where: {
+        authorId_ticketId: {
+          authorId: parseInt(req.user.id),
+          ticketId: parseInt(ticketId),
+        },
+      },
+    });
+
+    await prisma.ticket.delete({
+      where: {
+        id: parseInt(ticketId),
+      },
+    });
+
+    res.json({ message: "Ticket deleted" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
