@@ -296,3 +296,68 @@ export const getTicketId = async (req, res) => {
     res.status(500).json({ error: "error.message" });
   }
 };
+
+/**
+ * Updates a ticket.
+ */
+export const updateTicket = async (req, res) => {
+  const { ticketId } = req.params;
+  const { title, description, dependencyDest, internalSecDest, serviceId } =
+    req.body;
+
+  try {
+    const ticket = await prisma.ticket.findUnique({
+      where: {
+        id: parseInt(ticketId),
+      },
+    });
+
+    if (!ticket) return res.status(404).json({ error: "Ticket not found" });
+
+    const dependency = await prisma.dependency.findUnique({
+      where: {
+        id: parseInt(dependencyDest),
+      },
+      include: {
+        internalSec: {
+          include: {
+            service: true,
+          },
+        },
+      },
+    });
+
+    if (!dependency)
+      return res.status(404).json({ error: "Dependency not found" });
+
+    const internalSec = dependency.internalSec.find(
+      (sec) => sec.id === parseInt(internalSecDest)
+    );
+
+    if (!internalSec)
+      return res.status(404).json({ error: "Internal sector not found" });
+
+    const service = internalSec.service.find(
+      (serv) => serv.id === parseInt(serviceId)
+    );
+
+    if (!service) return res.status(404).json({ error: "Service not found" });
+
+    const updatedTicket = await prisma.ticket.update({
+      where: {
+        id: parseInt(ticketId),
+      },
+      data: {
+        title,
+        description,
+        dependencyDestId: parseInt(dependencyDest),
+        internalSecDestId: parseInt(internalSecDest),
+        serviceProvidedId: parseInt(serviceId),
+      },
+    });
+
+    res.json(updatedTicket);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
