@@ -52,7 +52,7 @@ export const createTicket = async (req, res) => {
       },
     });
 
-    res.json(ticket);
+    res.status(201).json(ticket);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -392,7 +392,7 @@ export const deleteTicket = async (req, res) => {
       },
     });
 
-    res.json({ message: "Ticket deleted" });
+    res.status(204).json({ message: "Ticket deleted" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
