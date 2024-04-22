@@ -58,8 +58,8 @@ export const register = async (req, res) => {
 
     const accessToken = await createAccessToken({ id: user.id, username });
     res.cookie("token", accessToken, {
-      httpOnly: process.env.NODE_ENV !== "development",
-      sameSite: "none",
+      httpOnly: false,
+      sameSite: "strict",
       secure: true,
     });
 
@@ -112,8 +112,8 @@ export const login = async (req, res) => {
       role: user.role.role,
     });
     res.cookie("token", accessToken, {
-      httpOnly: process.env.NODE_ENV !== "development",
-      sameSite: "none",
+      httpOnly: false,
+      sameSite: "strict",
       secure: true,
     });
 
@@ -131,7 +131,7 @@ export const login = async (req, res) => {
 
 export const logout = (req, res) => {
   res.cookie("token", "", {
-    httpOnly: process.env.NODE_ENV !== "development",
+    httpOnly: false,
     secure: true,
     expires: new Date(0),
   });
