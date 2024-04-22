@@ -59,7 +59,7 @@ export const register = async (req, res) => {
     const accessToken = await createAccessToken({ id: user.id, username });
     res.cookie("token", accessToken, {
       httpOnly: false,
-      sameSite: "strict",
+      sameSite: "none",
       secure: true,
     });
 
@@ -113,7 +113,7 @@ export const login = async (req, res) => {
     });
     res.cookie("token", accessToken, {
       httpOnly: false,
-      sameSite: "strict",
+      sameSite: "none",
       secure: true,
     });
 
