@@ -11,7 +11,7 @@ export const createServices = async (req, res) => {
       },
     });
 
-    res.json(services);
+    res.status(201).json(services);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

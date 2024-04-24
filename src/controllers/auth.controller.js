@@ -4,7 +4,6 @@ import jwt from "jsonwebtoken";
 import { prisma } from "../db.js";
 import { createAccessToken } from "../libs/jwt.js";
 import { TOKEN_SECRET } from "../conf/config.js";
-import e from "express";
 
 export const register = async (req, res) => {
   const { username, email, password } = req.body;
@@ -59,7 +58,7 @@ export const register = async (req, res) => {
     const accessToken = await createAccessToken({ id: user.id, username });
     res.cookie("token", accessToken, {
       httpOnly: process.env.NODE_ENV !== "development",
-      sameSite: "none",
+      sameSite: "strict",
       secure: true,
     });
 
@@ -111,9 +110,10 @@ export const login = async (req, res) => {
       internalSec: user.internalSec[0].internalSecId,
       role: user.role.role,
     });
+
     res.cookie("token", accessToken, {
       httpOnly: process.env.NODE_ENV !== "development",
-      sameSite: "none",
+      sameSite: "strict",
       secure: true,
     });
 

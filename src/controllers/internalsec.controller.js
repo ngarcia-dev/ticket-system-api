@@ -11,7 +11,7 @@ export const createInternalsec = async (req, res) => {
       },
     });
 
-    res.json(internalsec);
+    res.status(201).json(internalsec);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

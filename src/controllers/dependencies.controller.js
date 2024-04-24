@@ -11,7 +11,7 @@ export const createDependency = async (req, res) => {
       },
     });
 
-    res.json(dependency);
+    res.status(204).json(dependency);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -77,7 +77,7 @@ export const deleteDependency = async (req, res) => {
       },
     });
 
-    res.json(dependency);
+    res.status(204).json(dependency);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
