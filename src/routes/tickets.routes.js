@@ -19,14 +19,14 @@ router.get("/tickets/internalsec", authRequired, getTicketsInternalSec);
 
 router.get("/tickets/dependency", authRequired, getTicketsDependency);
 
-router.get("/tickets/:id", authRequired, getTicketId);
+router.get("/tickets/:ticketId", authRequired, getTicketId);
 
 router.post("/tickets", authRequired, createTicket);
 
-router.put("/tickets/:id/assign", authRequired, assignerTickets);
+router.put("/tickets/:ticketId/assign", authRequired, assignerTickets);
 
-router.patch("/tickets/:id", authRequired, updateTicket);
+router.patch("/tickets/:ticketId", authRequired, updateTicket);
 
-router.delete("/tickets/:id", authRequired, deleteTicket);
+router.delete("/tickets/:ticketId", authRequired, deleteTicket);
 
 export default router;
