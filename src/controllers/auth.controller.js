@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 
 import { prisma } from "../db.js";
 import { createAccessToken } from "../libs/jwt.js";
-import { TOKEN_SECRET } from "../conf/config.js";
 
 export const register = async (req, res) => {
   const { username, email, password } = req.body;
@@ -57,7 +56,7 @@ export const register = async (req, res) => {
 
     const accessToken = await createAccessToken({ id: user.id, username });
     res.cookie("token", accessToken, {
-      httpOnly: process.env.NODE_ENV !== "development",
+      httpOnly: process.env.NODE_ENV === "production",
       sameSite: "strict",
       secure: true,
     });
@@ -112,7 +111,7 @@ export const login = async (req, res) => {
     });
 
     res.cookie("token", accessToken, {
-      httpOnly: process.env.NODE_ENV !== "development",
+      httpOnly: process.env.NODE_ENV === "production",
       sameSite: "strict",
       secure: true,
     });
@@ -131,7 +130,7 @@ export const login = async (req, res) => {
 
 export const logout = (req, res) => {
   res.cookie("token", "", {
-    httpOnly: process.env.NODE_ENV !== "development",
+    httpOnly: process.env.NODE_ENV === "production",
     secure: true,
     expires: new Date(0),
   });
@@ -144,7 +143,7 @@ export const profile = async (req, res) => {
   if (!token) return res.status(401).json({ error: "User not authenticated" });
 
   try {
-    const payload = jwt.verify(token, TOKEN_SECRET);
+    const payload = jwt.verify(token, process.env.TOKEN_SECRET);
 
     const user = await prisma.user.findUnique({
       where: {
@@ -174,7 +173,7 @@ export const verifyToken = async (req, res) => {
   if (!token) return res.status(401).json({ error: "User not authenticated" });
 
   try {
-    const payload = jwt.verify(token, TOKEN_SECRET);
+    const payload = jwt.verify(token, process.env.TOKEN_SECRET);
 
     res.json(payload);
   } catch (error) {

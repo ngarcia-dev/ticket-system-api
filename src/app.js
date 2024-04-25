@@ -9,11 +9,9 @@ import dependenciesRoutes from "./routes/dependencies.routes.js";
 import internalSecRoutes from "./routes/internalsec.routes.js";
 import servicesRoutes from "./routes/services.routes.js";
 
-import { UI } from "./conf/config.js";
-
 const app = express();
 
-const whitlist = [UI];
+const whitlist = [process.env.UI];
 
 app.use(
   cors({
