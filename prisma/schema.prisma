@@ -65,6 +65,7 @@ model Ticket {
   id                Int             @id @default(autoincrement())
   title             String          @db.VarChar(255)
   description       String?
+  response          String?         @default("no response yet")
   status            String          @default("open")
   priority          String          @default("low")
   authorTicket      AuthorTicket[]
