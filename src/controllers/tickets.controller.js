@@ -61,17 +61,31 @@ export const createTicket = async (req, res) => {
 /**
  * Retrieves all tickets for a specific user.
  */
-export const getTicketsAuthor = async (req, res) => {
+export const getAllTicketsForUser = async (req, res) => {
   const { id } = req.user;
 
   try {
     const tickets = await prisma.ticket.findMany({
       where: {
-        authorTicket: {
-          every: {
-            authorId: parseInt(id),
+        OR: [
+          {
+            authorTicket: {
+              every: {
+                authorId: id,
+              },
+            },
           },
-        },
+          {
+            assignerTicket: {
+              assignerId: parseInt(id),
+            },
+          },
+          {
+            executorTicket: {
+              executorId: parseInt(id),
+            },
+          },
+        ],
       },
       include: {
         authorTicket: {

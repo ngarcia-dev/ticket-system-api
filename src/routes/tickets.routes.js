@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { authRequired } from "../middlewares/validateToken.js";
 import {
-  getTicketsAuthor,
+  getAllTicketsForUser,
   getTicketsInternalSec,
   getTicketsDependency,
   createTicket,
@@ -13,7 +13,7 @@ import {
 
 const router = Router();
 
-router.get("/tickets", authRequired, getTicketsAuthor);
+router.get("/tickets", authRequired, getAllTicketsForUser);
 
 router.get("/tickets/internalsec", authRequired, getTicketsInternalSec);
 
