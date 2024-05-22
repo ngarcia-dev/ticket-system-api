@@ -15,9 +15,9 @@ const router = Router();
 
 router.get("/tickets", authRequired, getAllTicketsForUser);
 
-router.get("/tickets/internalsec", authRequired, getTicketsInternalSec);
+router.get("/tickets-internalsec", authRequired, getTicketsInternalSec);
 
-router.get("/tickets/dependency", authRequired, getTicketsDependency);
+router.get("/tickets-dependency", authRequired, getTicketsDependency);
 
 router.get("/tickets/:ticketId", authRequired, getTicketId);
 
