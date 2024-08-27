@@ -6,7 +6,7 @@ import {
   createDependency,
   updateDependency,
   deleteDependency,
-} from "../controllers/dependencies.controller.js";
+} from "../controllers/dependencies.js";
 
 const router = Router();
 

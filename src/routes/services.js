@@ -3,7 +3,7 @@ import { authRequired } from "../middlewares/validateToken.js";
 import {
   createServices,
   getServices,
-} from "../controllers/services.controller.js";
+} from "../controllers/services.js";
 
 const router = Router();
 

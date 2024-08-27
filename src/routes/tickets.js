@@ -9,7 +9,7 @@ import {
   getTicketId,
   updateTicket,
   deleteTicket,
-} from "../controllers/tickets.controller.js";
+} from "../controllers/tickets.js";
 
 const router = Router();
 

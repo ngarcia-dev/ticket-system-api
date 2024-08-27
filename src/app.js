@@ -3,11 +3,11 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
-import authRoutes from "./routes/auth.routes.js";
-import ticketsRoutes from "./routes/tickets.routes.js";
-import dependenciesRoutes from "./routes/dependencies.routes.js";
-import internalSecRoutes from "./routes/internalsec.routes.js";
-import servicesRoutes from "./routes/services.routes.js";
+import authRoutes from "./routes/auth.js";
+import ticketsRoutes from "./routes/tickets.js";
+import dependenciesRoutes from "./routes/dependencies.js";
+import internalSecRoutes from "./routes/internalsec.js";
+import servicesRoutes from "./routes/services.js";
 
 const app = express();
 
